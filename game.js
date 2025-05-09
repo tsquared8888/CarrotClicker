@@ -12,7 +12,6 @@ let farmers = 0;
 let factories = 0;
 
 // Costs for adding generators
-let carrotsPerClickCost = 20;
 let autoClickCost = 40;
 let farmerCost = 200;
 let factoryCost = 800;
@@ -20,8 +19,14 @@ let factoryCost = 800;
 // Rates
 let carrotsPerClick = 1; // add 1 each upgrade
 let autoClickRate = 0.01; // add 0.01 each upgrade
-let farmerRate = 5; // add 5 each upgrade
-let factoryRate = 25 // add 25 each upgrade
+let farmerRate = 0.1; // add 1 each upgrade
+let factoryRate = 1 // add 5 each upgrade
+
+// Rates Costs
+let carrotsPerClickCost = 20;
+let autoClickRateCost = 100;
+let farmerRateCost = 500;
+let factoryRateCost = 2500
 
 /************* BUTTONS *************/
 // Need buttons outside input or it gets triggered indefinitely
@@ -41,21 +46,47 @@ carrotsPerClickCostButton.addEventListener("click", () => {
     if (carrots >= carrotsPerClickCost) {
         carrots -= carrotsPerClickCost;
         carrotsPerClick += 1;
-        carrotsPerClickCost *= 4;
+        carrotsPerClickCost *= 5;
         carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClickCost;
     }
 });
 
 const autoClickCostButton = document.createElement('button');
-autoClickCostButton.innerText = "Carrots Per Click = " + autoClickCost;
+autoClickCostButton.innerText = "Add Auto Clicker = " + autoClickCost;
 document.body.appendChild(autoClickCostButton);
 autoClickCostButton.addEventListener("click", () => {
     if (carrots >= autoClickCost) {
         carrots -= autoClickCost;
         autoClickers += 1;
-        autoClickCost +=  (2 * autoClickCost);
+        autoClickCost += Math.trunc(autoClickCost/10);
         autoClickCostButton.innerText = "Add Auto Clicker = " + autoClickCost;
         console.log("auto clickers: " + autoClickers);
+    }
+});
+
+const farmerCostButton = document.createElement('button');
+farmerCostButton.innerText = "Add Farmer = " + farmerCost;
+document.body.appendChild(farmerCostButton);
+farmerCostButton.addEventListener("click", () => {
+    if (carrots >= farmerCost) {
+        carrots -= farmerCost;
+        farmers += 1;
+        farmerCost += Math.trunc(farmerCost/5);
+        farmerCostButton.innerText = "Add Farmer = " + farmerCost;
+        console.log("farmers: " + farmers);
+    }
+});
+
+const factoryCostButton = document.createElement('button');
+factoryCostButton.innerText = "Add Factory = " + factoryCost;
+document.body.appendChild(factoryCostButton);
+factoryCostButton.addEventListener("click", () => {
+    if (carrots >= factoryCost) {
+        carrots -= factoryCost;
+        factories += 1;
+        factoryCost += Math.trunc(factoryCost/2);
+        factoryCostButton.innerText = "Add Factory = " + factoryCost;
+        console.log("factories: " + factories);
     }
 });
 
@@ -63,8 +94,11 @@ autoClickCostButton.addEventListener("click", () => {
 /************* CREATION FUNCTIONS *************/
 
 /************* SUPPORT FUNCTIONS *************/
+
 function addCarrots(deltaTime) {
     carrots += autoClickers * autoClickRate * carrotsPerClick * deltaTime;
+    carrots += farmers * farmerRate * deltaTime;
+    carrots += factories * factoryRate * deltaTime;
 }
 
 /************* MAIN FUNCTIONS *************/
