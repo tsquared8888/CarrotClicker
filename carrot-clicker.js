@@ -149,6 +149,7 @@ function addCarrots(deltaTime) {
 
 // draws all buttons in correct positions
 function drawButtons() {
+    ctx.fillStyle = 'green';
     // Main carrot button
     ctx.fillRect(carrotMainButton.x, carrotMainButton.y, carrotMainButton.w, carrotMainButton.h);
     ctx.drawImage(CARROT_SPRITE, 40, 20);
@@ -162,7 +163,27 @@ function drawButtons() {
 
 // add text on top of buttons and in info bar at a bottom
 function drawText() {
+    ctx.fillStyle = 'white';
+    ctx.font = "12px Consolas";
 
+    // Upgrade buttons
+    ctx.fillText("Buy Carrot Per Click", carrotsPerClick.x + 5, carrotsPerClick.y + carrotsPerClick.h/2-6);
+    ctx.fillText("Cost: " + carrotsPerClick.cost, carrotsPerClick.x + 5, carrotsPerClick.y + carrotsPerClick.h/2 + 12);
+    ctx.fillText("Buy Auto Clicker", autoClicker.x + 5, autoClicker.y + autoClicker.h/2-6);
+    ctx.fillText("Cost: " + autoClicker.cost, autoClicker.x + 5, autoClicker.y + autoClicker.h/2 + 12);
+    ctx.fillText("Buy Farmer", farmer.x + 5, farmer.y + farmer.h/2-6);
+    ctx.fillText("Cost: " + farmer.cost, farmer.x + 5, farmer.y + farmer.h/2 + 12);
+    ctx.fillText("Buy Factory", factory.x + 5, factory.y + factory.h/2-6);
+    ctx.fillText("Cost: " + factory.cost, factory.x + 5, factory.y + factory.h/2 + 12);
+    
+    // Info
+    ctx.fillStyle = 'darkslategrey';
+    ctx.font = "16px Consolas";
+    ctx.fillText("Carrots: " + Math.trunc(carrots), carrotMainButton.x, carrotMainButton.y + carrotMainButton.h + 16);
+    ctx.fillText("Carrots Per Click: " + carrotsPerClick.count, carrotMainButton.x, carrotMainButton.y + carrotMainButton.h + 36);
+    ctx.fillText("Auto Clickers: " + autoClicker.count, carrotMainButton.x, carrotMainButton.y + carrotMainButton.h + 56);
+    ctx.fillText("Farmers: " + farmer.count, carrotMainButton.x, carrotMainButton.y + carrotMainButton.h + 76);
+    ctx.fillText("Factories: " + factory.count, carrotMainButton.x, carrotMainButton.y + carrotMainButton.h + 96);
 }
 
 /************* MAIN FUNCTIONS *************/
@@ -233,9 +254,8 @@ function update(deltaTime) {
 function draw() {
     ctx.fillStyle = 'orange';
     ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    ctx.fillStyle = 'green';
     drawButtons();
-    ctx.fillStyle = 'grey';
+    drawText();
 }
 
 function gameLoop(timestamp) {
