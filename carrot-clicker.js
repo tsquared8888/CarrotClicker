@@ -6,10 +6,27 @@ GAME_WIDTH = 400;
 GAME_HEIGHT = 300;
 let lastTime = 0;
 
-// Number of generators
-let autoClickers = 0;
-let farmers = 0;
-let factories = 0;
+// Carrot generator variables
+let carrotsPerClick = {
+    count: 1, // 
+    cost: 20,
+    costIncrement: 0.2,
+};
+let autoClicker = {
+    count: 0,
+    cost: 40,
+    costIncrement: 10
+};
+let farmer = {
+    count: 0,
+    cost: 200,
+    costIncrement: 5
+};
+let factory = {
+    count: 0,
+    cost: 800,
+    costIncrement: 2
+};
 
 // Costs for adding generators
 let autoClickCost = 40;
@@ -17,7 +34,6 @@ let farmerCost = 200;
 let factoryCost = 800;
 
 // Rates
-let carrotsPerClick = 1; // add 1 each upgrade
 let autoClickRate = 0.01; // add 0.01 each upgrade
 let farmerRate = 0.1; // add 1 each upgrade
 let factoryRate = 1 // add 5 each upgrade
@@ -36,58 +52,55 @@ const carrotButton = document.createElement('button');
 carrotButton.innerText = "Carrot";
 document.body.appendChild(carrotButton);
 carrotButton.addEventListener("click", () => {
-    carrots += carrotsPerClick;
+    carrots += carrotsPerClick.count;
 });
 
+// carrots per click upgrade button
 const carrotsPerClickCostButton = document.createElement('button');
-carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClickCost;
+carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClick.cost;
 document.body.appendChild(carrotsPerClickCostButton);
 carrotsPerClickCostButton.addEventListener("click", () => {
-    if (carrots >= carrotsPerClickCost) {
-        carrots -= carrotsPerClickCost;
-        carrotsPerClick += 1;
-        carrotsPerClickCost *= 5;
-        carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClickCost;
-    }
+    //carrotsPerClickCost = 
+    buyUpgrade(carrotsPerClick);
+    //carrotsPerClick += 1;
+    carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClick.cost;
 });
 
+// add auto clickers upgrade button
 const autoClickCostButton = document.createElement('button');
-autoClickCostButton.innerText = "Add Auto Clicker = " + autoClickCost;
+autoClickCostButton.innerText = "Add Auto Clicker = " + autoClicker.cost;
 document.body.appendChild(autoClickCostButton);
 autoClickCostButton.addEventListener("click", () => {
-    if (carrots >= autoClickCost) {
-        carrots -= autoClickCost;
-        autoClickers += 1;
-        autoClickCost += Math.trunc(autoClickCost/10);
-        autoClickCostButton.innerText = "Add Auto Clicker = " + autoClickCost;
-        console.log("auto clickers: " + autoClickers);
-    }
+    //autoClickCost = 
+    buyUpgrade(autoClicker);
+    //autoClickers += 1;
+    autoClickCostButton.innerText = "Add Auto Clicker = " + autoClicker.cost;
+    //console.log("auto clickers: " + autoClickers);
+
 });
 
+// add farmers upgrade button
 const farmerCostButton = document.createElement('button');
-farmerCostButton.innerText = "Add Farmer = " + farmerCost;
+farmerCostButton.innerText = "Add Farmer = " + farmer.cost;
 document.body.appendChild(farmerCostButton);
 farmerCostButton.addEventListener("click", () => {
-    if (carrots >= farmerCost) {
-        carrots -= farmerCost;
-        farmers += 1;
-        farmerCost += Math.trunc(farmerCost/5);
-        farmerCostButton.innerText = "Add Farmer = " + farmerCost;
-        console.log("farmers: " + farmers);
-    }
+    //farmerCost = 
+    buyUpgrade(farmer);
+    //farmers += 1;
+    farmerCostButton.innerText = "Add Farmer = " + farmer.cost;
+    //console.log("farmers: " + farmers);
 });
 
+// add factories upgrade button
 const factoryCostButton = document.createElement('button');
-factoryCostButton.innerText = "Add Factory = " + factoryCost;
+factoryCostButton.innerText = "Add Factory = " + factory.cost;
 document.body.appendChild(factoryCostButton);
 factoryCostButton.addEventListener("click", () => {
-    if (carrots >= factoryCost) {
-        carrots -= factoryCost;
-        factories += 1;
-        factoryCost += Math.trunc(factoryCost/2);
-        factoryCostButton.innerText = "Add Factory = " + factoryCost;
-        console.log("factories: " + factories);
-    }
+    //factoryCost = 
+    buyUpgrade(factory);
+    //factories += 1;
+    factoryCostButton.innerText = "Add Factory = " + factory.cost;
+    //console.log("factories: " + factories);
 });
 
 
@@ -95,8 +108,19 @@ factoryCostButton.addEventListener("click", () => {
 
 /************* SUPPORT FUNCTIONS *************/
 
+// Handles removing carrots and increasing cost of upgrades.
+// Lower cost Modifier = higher rate of price increase
+function buyUpgrade(generator) {
+    if (carrots >= generator.cost) {
+        carrots -= generator.cost;
+        generator.cost += Math.trunc(generator.cost/generator.costIncrement);
+        generator.count += 1;
+        //console.log(cost);
+    }
+}
+
 function addCarrots(deltaTime) {
-    carrots += autoClickers * autoClickRate * carrotsPerClick * deltaTime;
+    carrots += autoClicker.count * autoClicker.rate * carrotsPerClick * deltaTime;
     carrots += farmers * farmerRate * deltaTime;
     carrots += factories * factoryRate * deltaTime;
 }
@@ -115,8 +139,8 @@ function input() {
 }
 
 function update(deltaTime) {
-    addCarrots(deltaTime);
-    document.getElementById('ui').innerHTML = Math.trunc(carrots) + " carrots";
+    //addCarrots(deltaTime);
+    document.getElementById('ui').innerHTML = Math.trunc(carrots) + " carrots | " + carrotsPerClick.count + " carrots per click | " + autoClicker.count + " auto clickers | " + farmer.count + " farmers | " + factory.count + " factories";
 }
 
 function draw() {
