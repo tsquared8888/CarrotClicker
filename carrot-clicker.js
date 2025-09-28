@@ -8,30 +8,28 @@ let lastTime = 0;
 
 // Carrot generator variables
 let carrotsPerClick = {
-    count: 1, // 
+    count: 1, // number of carrots per click
     cost: 20,
     costIncrement: 0.2,
 };
 let autoClicker = {
     count: 0,
     cost: 40,
-    costIncrement: 10
+    costIncrement: 10,
+    rate: 0.01
 };
 let farmer = {
     count: 0,
     cost: 200,
-    costIncrement: 5
+    costIncrement: 5,
+    rate: 0.1
 };
 let factory = {
     count: 0,
     cost: 800,
-    costIncrement: 2
+    costIncrement: 2,
+    rate: 1
 };
-
-// Costs for adding generators
-let autoClickCost = 40;
-let farmerCost = 200;
-let factoryCost = 800;
 
 // Rates
 let autoClickRate = 0.01; // add 0.01 each upgrade
@@ -120,9 +118,9 @@ function buyUpgrade(generator) {
 }
 
 function addCarrots(deltaTime) {
-    carrots += autoClicker.count * autoClicker.rate * carrotsPerClick * deltaTime;
-    carrots += farmers * farmerRate * deltaTime;
-    carrots += factories * factoryRate * deltaTime;
+    carrots += autoClicker.count * autoClicker.rate * carrotsPerClick.count * deltaTime;
+    carrots += farmer.count * farmer.rate * deltaTime;
+    carrots += factory.count * factory.rate * deltaTime;
 }
 
 /************* MAIN FUNCTIONS *************/
@@ -139,7 +137,7 @@ function input() {
 }
 
 function update(deltaTime) {
-    //addCarrots(deltaTime);
+    addCarrots(deltaTime);
     document.getElementById('ui').innerHTML = Math.trunc(carrots) + " carrots | " + carrotsPerClick.count + " carrots per click | " + autoClicker.count + " auto clickers | " + farmer.count + " farmers | " + factory.count + " factories";
 }
 
