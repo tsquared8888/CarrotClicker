@@ -1,3 +1,7 @@
+body {
+    background-color: darkslategrey;
+}
+
 #game-over-text {
     position: absolute;
     top: 20px;

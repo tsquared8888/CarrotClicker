@@ -1,9 +1,11 @@
 /************* VARIABLES *************/
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-let carrots = 0;
 GAME_WIDTH = 400;
 GAME_HEIGHT = 300;
+const CARROT_SPRITE = new Image();
+CARROT_SPRITE.src = 'carrot.png';
+let carrots = 0;
 let lastTime = 0;
 
 // Carrot generator variables
@@ -58,9 +60,7 @@ const carrotsPerClickCostButton = document.createElement('button');
 carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClick.cost;
 document.body.appendChild(carrotsPerClickCostButton);
 carrotsPerClickCostButton.addEventListener("click", () => {
-    //carrotsPerClickCost = 
     buyUpgrade(carrotsPerClick);
-    //carrotsPerClick += 1;
     carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClick.cost;
 });
 
@@ -69,11 +69,8 @@ const autoClickCostButton = document.createElement('button');
 autoClickCostButton.innerText = "Add Auto Clicker = " + autoClicker.cost;
 document.body.appendChild(autoClickCostButton);
 autoClickCostButton.addEventListener("click", () => {
-    //autoClickCost = 
     buyUpgrade(autoClicker);
-    //autoClickers += 1;
     autoClickCostButton.innerText = "Add Auto Clicker = " + autoClicker.cost;
-    //console.log("auto clickers: " + autoClickers);
 
 });
 
@@ -82,11 +79,8 @@ const farmerCostButton = document.createElement('button');
 farmerCostButton.innerText = "Add Farmer = " + farmer.cost;
 document.body.appendChild(farmerCostButton);
 farmerCostButton.addEventListener("click", () => {
-    //farmerCost = 
     buyUpgrade(farmer);
-    //farmers += 1;
     farmerCostButton.innerText = "Add Farmer = " + farmer.cost;
-    //console.log("farmers: " + farmers);
 });
 
 // add factories upgrade button
@@ -94,11 +88,8 @@ const factoryCostButton = document.createElement('button');
 factoryCostButton.innerText = "Add Factory = " + factory.cost;
 document.body.appendChild(factoryCostButton);
 factoryCostButton.addEventListener("click", () => {
-    //factoryCost = 
     buyUpgrade(factory);
-    //factories += 1;
     factoryCostButton.innerText = "Add Factory = " + factory.cost;
-    //console.log("factories: " + factories);
 });
 
 
@@ -113,7 +104,6 @@ function buyUpgrade(generator) {
         carrots -= generator.cost;
         generator.cost += Math.trunc(generator.cost/generator.costIncrement);
         generator.count += 1;
-        //console.log(cost);
     }
 }
 
@@ -121,6 +111,24 @@ function addCarrots(deltaTime) {
     carrots += autoClicker.count * autoClicker.rate * carrotsPerClick.count * deltaTime;
     carrots += farmer.count * farmer.rate * deltaTime;
     carrots += factory.count * factory.rate * deltaTime;
+}
+
+// draws all buttons in correct positions
+function drawButtons() {
+    // Main carrot button
+    ctx.fillRect(5, 5, 245, 195);
+    ctx.drawImage(CARROT_SPRITE, 40, 20);
+    
+    // Upgrade buttons
+    ctx.fillRect(255, 5, 140, 45);
+    ctx.fillRect(255, 55, 140, 45);
+    ctx.fillRect(255, 105, 140, 45);
+    ctx.fillRect(255, 155, 140, 45);
+}
+
+// add text on top of buttons and in info bar at a bottom
+function drawText() {
+
 }
 
 /************* MAIN FUNCTIONS *************/
@@ -142,9 +150,11 @@ function update(deltaTime) {
 }
 
 function draw() {
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'orange';
     ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = 'green';
+    drawButtons();
+    ctx.fillStyle = 'grey';
 }
 
 function gameLoop(timestamp) {
