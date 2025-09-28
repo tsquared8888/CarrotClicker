@@ -5,32 +5,66 @@ GAME_WIDTH = 400;
 GAME_HEIGHT = 300;
 const CARROT_SPRITE = new Image();
 CARROT_SPRITE.src = 'carrot.png';
+// enum
+const ButtonStates = Object.freeze({
+    NULL: "null",
+    MAIN: "main",
+    CPC: "cpc",
+    AUTO: "auto",
+    FARMER: "farmer",
+    FACTORY: "factory",
+});
+let buttonState = ButtonStates.NULL
 let carrots = 0;
 let lastTime = 0;
+let clickReady = true;
 
-// Carrot generator variables
+// Carrot generator variables/buttons
+let carrotMainButton = {
+    x: 5,
+    y: 5,
+    w: 245,
+    h: 195
+};
+
 let carrotsPerClick = {
     count: 1, // number of carrots per click
     cost: 20,
     costIncrement: 0.2,
+    x: 255,
+    y: 5,
+    w: 140,
+    h: 45
 };
 let autoClicker = {
     count: 0,
     cost: 40,
     costIncrement: 10,
-    rate: 0.01
+    rate: 0.01,
+    x: 255,
+    y: 55,
+    w: 140,
+    h: 45
 };
 let farmer = {
     count: 0,
     cost: 200,
     costIncrement: 5,
-    rate: 0.1
+    rate: 0.1,
+    x: 255,
+    y: 105,
+    w: 140,
+    h: 45
 };
 let factory = {
     count: 0,
     cost: 800,
     costIncrement: 2,
-    rate: 1
+    rate: 1,
+    x: 255,
+    y: 155,
+    w: 140,
+    h: 45
 };
 
 // Rates
@@ -116,14 +150,14 @@ function addCarrots(deltaTime) {
 // draws all buttons in correct positions
 function drawButtons() {
     // Main carrot button
-    ctx.fillRect(5, 5, 245, 195);
+    ctx.fillRect(carrotMainButton.x, carrotMainButton.y, carrotMainButton.w, carrotMainButton.h);
     ctx.drawImage(CARROT_SPRITE, 40, 20);
-    
+
     // Upgrade buttons
-    ctx.fillRect(255, 5, 140, 45);
-    ctx.fillRect(255, 55, 140, 45);
-    ctx.fillRect(255, 105, 140, 45);
-    ctx.fillRect(255, 155, 140, 45);
+    ctx.fillRect(carrotsPerClick.x, carrotsPerClick.y, carrotsPerClick.w, carrotsPerClick.h);
+    ctx.fillRect(autoClicker.x, autoClicker.y, autoClicker.w, autoClicker.h);
+    ctx.fillRect(farmer.x, farmer.y, farmer.w, farmer.h);
+    ctx.fillRect(factory.x, factory.y, factory.w, factory.h);
 }
 
 // add text on top of buttons and in info bar at a bottom
@@ -135,6 +169,53 @@ function drawText() {
 
 function input() {
     
+    document.addEventListener("mousemove", (event)=> {
+        //console.log(event.clientX + " " + event.clientY);
+        // We are inside the main carrot button
+        if ((event.clientX > carrotMainButton.x && event.clientX < carrotMainButton.x + carrotMainButton.w) && (event.clientY > carrotMainButton.y && event.clientY < carrotMainButton.y + carrotMainButton.h)) {
+           buttonState = ButtonStates.MAIN;
+        } else if ((event.clientX > carrotsPerClick.x && event.clientX < carrotsPerClick.x + carrotsPerClick.w) && (event.clientY > carrotsPerClick.y && event.clientY < carrotsPerClick.y + carrotsPerClick.h)) {
+           buttonState = ButtonStates.CPC;
+        } else if ((event.clientX > autoClicker.x && event.clientX < autoClicker.x + autoClicker.w) && (event.clientY > autoClicker.y && event.clientY < autoClicker.y + autoClicker.h)) {
+           buttonState = ButtonStates.AUTO;
+        } else if ((event.clientX > farmer.x && event.clientX < farmer.x + farmer.w) && (event.clientY > farmer.y && event.clientY < farmer.y + farmer.h)) {
+           buttonState = ButtonStates.FARMER;
+        } else if ((event.clientX > factory.x && event.clientX < factory.x + factory.w) && (event.clientY > factory.y && event.clientY < factory.y + factory.h)) {
+           buttonState = ButtonStates.FACTORY;
+        } else {
+            buttonState = ButtonStates.NULL;
+        }
+        console.log(buttonState);
+    });
+
+    document.addEventListener("mousedown", (event)=> {
+        if (clickReady) {
+
+            switch (buttonState) {
+                case ButtonStates.MAIN:
+                    carrots += carrotsPerClick.count;
+                    break;
+                case ButtonStates.CPC:
+                    buyUpgrade(carrotsPerClick);
+                    break;
+                case ButtonStates.AUTO:
+                    buyUpgrade(autoClicker);
+                    break;
+                case ButtonStates.FARMER:
+                    buyUpgrade(farmer);
+                    break;
+                case ButtonStates.FACTORY:
+                    buyUpgrade(factory);
+                    break;
+            }
+        }
+        clickReady = false;
+    });
+
+    document.addEventListener("mouseup", (event)=> {
+        clickReady = true
+    });
+
     document.addEventListener("keydown", (event)=> {
 
     });
