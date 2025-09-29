@@ -198,14 +198,6 @@ function input() {
     document.addEventListener("mouseup", (event)=> {
         clickReady = true
     });
-
-    document.addEventListener("keydown", (event)=> {
-
-    });
-    
-    document.addEventListener("keyup", (event)=> {
-    
-    });
 }
 
 function update(deltaTime) {
