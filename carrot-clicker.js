@@ -67,66 +67,6 @@ let factory = {
     h: 45
 };
 
-// Rates
-let autoClickRate = 0.01; // add 0.01 each upgrade
-let farmerRate = 0.1; // add 1 each upgrade
-let factoryRate = 1 // add 5 each upgrade
-
-// Rates Costs
-let carrotsPerClickCost = 20;
-let autoClickRateCost = 100;
-let farmerRateCost = 500;
-let factoryRateCost = 2500
-
-/************* BUTTONS *************/
-// Need buttons outside input or it gets triggered indefinitely
-
-// carrot button
-const carrotButton = document.createElement('button');
-carrotButton.innerText = "Carrot";
-document.body.appendChild(carrotButton);
-carrotButton.addEventListener("click", () => {
-    carrots += carrotsPerClick.count;
-});
-
-// carrots per click upgrade button
-const carrotsPerClickCostButton = document.createElement('button');
-carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClick.cost;
-document.body.appendChild(carrotsPerClickCostButton);
-carrotsPerClickCostButton.addEventListener("click", () => {
-    buyUpgrade(carrotsPerClick);
-    carrotsPerClickCostButton.innerText = "Carrots Per Click = " + carrotsPerClick.cost;
-});
-
-// add auto clickers upgrade button
-const autoClickCostButton = document.createElement('button');
-autoClickCostButton.innerText = "Add Auto Clicker = " + autoClicker.cost;
-document.body.appendChild(autoClickCostButton);
-autoClickCostButton.addEventListener("click", () => {
-    buyUpgrade(autoClicker);
-    autoClickCostButton.innerText = "Add Auto Clicker = " + autoClicker.cost;
-
-});
-
-// add farmers upgrade button
-const farmerCostButton = document.createElement('button');
-farmerCostButton.innerText = "Add Farmer = " + farmer.cost;
-document.body.appendChild(farmerCostButton);
-farmerCostButton.addEventListener("click", () => {
-    buyUpgrade(farmer);
-    farmerCostButton.innerText = "Add Farmer = " + farmer.cost;
-});
-
-// add factories upgrade button
-const factoryCostButton = document.createElement('button');
-factoryCostButton.innerText = "Add Factory = " + factory.cost;
-document.body.appendChild(factoryCostButton);
-factoryCostButton.addEventListener("click", () => {
-    buyUpgrade(factory);
-    factoryCostButton.innerText = "Add Factory = " + factory.cost;
-});
-
-
 /************* CREATION FUNCTIONS *************/
 
 /************* SUPPORT FUNCTIONS *************/
@@ -159,6 +99,29 @@ function drawButtons() {
     ctx.fillRect(autoClicker.x, autoClicker.y, autoClicker.w, autoClicker.h);
     ctx.fillRect(farmer.x, farmer.y, farmer.w, farmer.h);
     ctx.fillRect(factory.x, factory.y, factory.w, factory.h);
+
+    if (clickReady) {
+        ctx.fillStyle = "rgba(166, 216, 170, 0.56)";
+    } else {
+        ctx.fillStyle = "rgba(7, 78, 13, 0.56)";
+    }
+    switch (buttonState) {
+        case ButtonStates.MAIN:
+            ctx.fillRect(carrotMainButton.x, carrotMainButton.y, carrotMainButton.w, carrotMainButton.h);
+            break;
+        case ButtonStates.CPC:
+            ctx.fillRect(carrotsPerClick.x, carrotsPerClick.y, carrotsPerClick.w, carrotsPerClick.h);
+            break;
+        case ButtonStates.AUTO:
+            ctx.fillRect(autoClicker.x, autoClicker.y, autoClicker.w, autoClicker.h);
+            break;
+        case ButtonStates.FARMER:
+            ctx.fillRect(farmer.x, farmer.y, farmer.w, farmer.h);
+            break;
+        case ButtonStates.FACTORY:
+            ctx.fillRect(factory.x, factory.y, factory.w, factory.h);
+            break;
+    }
 }
 
 // add text on top of buttons and in info bar at a bottom
@@ -206,7 +169,6 @@ function input() {
         } else {
             buttonState = ButtonStates.NULL;
         }
-        console.log(buttonState);
     });
 
     document.addEventListener("mousedown", (event)=> {
@@ -248,7 +210,6 @@ function input() {
 
 function update(deltaTime) {
     addCarrots(deltaTime);
-    document.getElementById('ui').innerHTML = Math.trunc(carrots) + " carrots | " + carrotsPerClick.count + " carrots per click | " + autoClicker.count + " auto clickers | " + farmer.count + " farmers | " + factory.count + " factories";
 }
 
 function draw() {
